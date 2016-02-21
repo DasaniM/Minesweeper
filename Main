@@ -1,0 +1,113 @@
+/**
+ * Minesweeper is a classical computer game. The aim of the game is to uncover all the hidden mines. The grid or mine map will give you clues to where the 
+ * mines are hidden, and you will have to make sure that you uncover all the grid spaces that are not mines inorder to win the game.
+ */
+import java.io.*;
+/**
+ * The main method
+ * @authour Dasani
+ */
+class Main{
+    /**
+     * This is the main method which shows the final output on screen.
+     */
+    public static void main(String args[])throws IOException{
+        System.out.print("Enter your name:");
+        BufferedReader br1 = new BufferedReader(new InputStreamReader(System.in));
+        String name = br1.readLine();
+        System.out.println("How to play the game:First you select a grid size.");
+        System.out.println("                     The number of bombs in the grid will be decided by the computer.");
+        System.out.println("                     The aim of the game is to clear all the grids that don't contain bombs.");
+        System.out.println("                     When you enter the co-ordinates of your choice some number will appear.");
+        System.out.println("                     These numbers represent the number of bombs there are in the 8 grids surrounding it.");
+        System.out.println("                     Using this you have to guess which ones have bombs and which ones don't.");                                 
+        System.out.println("");
+        System.out.println("Please enter required grid size(Note:it must not be less than 10 or greater than 50):");
+        BufferedReader br2 = new BufferedReader(new InputStreamReader(System.in));
+        String number = br2.readLine();
+        int side = (int)Integer.parseInt(number);
+        if(side>50||side<10){
+            System.out.println("The grid size does not fit within the specified limit");
+            System.out.println("Please enter a different grid size that is between 10 and 50");
+            BufferedReader br21 = new BufferedReader(new InputStreamReader(System.in));
+            String num = br21.readLine();
+            side = (int)Integer.parseInt(num);
+        }
+        Board fake = new Board(side);
+        fake.printBoard();
+        System.out.println("Enter row number:");
+        BufferedReader br3 = new BufferedReader(new InputStreamReader(System.in));
+        String sx = br3.readLine();
+        System.out.println("Enter column number:");
+        BufferedReader br4 = new BufferedReader(new InputStreamReader(System.in));
+        String sy = br4.readLine();
+        int x = Integer.parseInt(sx);
+        int y = Integer.parseInt(sy);
+        int x1 = x;
+        int y1 = y;
+         if(x>=side||y>=side){
+            int a = side-1;
+            System.out.println("The co-ordinates are out of range(Note:the co-ordinates range between 0 and "+ a +""+ ")" );
+            System.out.println("Enter row number:");
+            BufferedReader br5 = new BufferedReader(new InputStreamReader(System.in));
+            sx = br5.readLine();
+            System.out.println("Enter column number:");
+            BufferedReader br6 = new BufferedReader(new InputStreamReader(System.in));
+            sy = br6.readLine();
+            x = Integer.parseInt(sx);
+            y = Integer.parseInt(sy);
+            x1 = x;
+            y1 = y;
+        }
+        Bomb[]mines = Minesweeper.finalArray(side,x1,y1);
+        Board real = (Minesweeper.boardVals(mines));
+        //Just as a precaution
+        if(real.board[x1][y1]=='*'){
+            System.out.println("Game over!!Better luck next time, "+name+".");
+            return;
+        }
+        //real.printBoard();
+        Board.printDup(real,fake,x1,y1);
+        System.out.println("");
+        int i = side*side;
+        while(i>side){
+            System.out.println("Enter row number:");
+            BufferedReader br7 = new BufferedReader(new InputStreamReader(System.in));
+            sx = br7.readLine();
+            System.out.println("Enter column number:");
+            BufferedReader br8 = new BufferedReader(new InputStreamReader(System.in));
+            sy = br8.readLine();
+            x = Integer.parseInt(sx);
+            y = Integer.parseInt(sy);
+            x1 = x;
+            y1 = y;
+            if(x>=side||y>=side){
+                int a = side-1;
+                System.out.println("The co-ordinates are out of range(Note:the co-ordinates range between 0 and "+a+")");
+                System.out.println("Enter row number:");
+                BufferedReader br9 = new BufferedReader(new InputStreamReader(System.in));
+                sx = br9.readLine();
+                System.out.println("Enter column number:");
+                BufferedReader br10 = new BufferedReader(new InputStreamReader(System.in));
+                sy = br10.readLine();
+                x = Integer.parseInt(sx);
+                y = Integer.parseInt(sy);
+                x1 = x;
+                y1 = y;
+            }
+            if(Minesweeper.checkBomb(mines,x1,y1)==true){
+                real.printBoard();
+                System.out.println("Game over!!Better luck next time, "+name+".");
+                return;
+            }
+            else{
+                Board.printDup(real,fake,x1,y1);
+                System.out.println("");
+                i = Board.unrevealed(fake);
+            }
+        }
+        System.out.println("Congratulations , "+name+" you have won the game.");
+        return;
+    }
+}
+
