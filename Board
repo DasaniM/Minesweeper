@@ -1,0 +1,294 @@
+/**
+ * The following class constructs the board objects and has some methods which realte to it.
+ * It consists of a two dimensional array of chars.
+ */
+class Board{
+    char[][]board;
+    /**
+     * The following constructs a board of a given side length of equal rows and columns.It makes each of the positions of the array hold a dot.
+     * @param side:This is the required size of the Board array
+     * @return Board:return a board of required size
+     */
+    public Board(int side){
+        char[][] board = new char[side][side];
+        char x = (char)46;
+        for (int i =0;i<side;i++){
+            for(int j = 0; j<side;j++){
+                board[i][j]= x;
+            }
+        }
+        this.board = board;
+    } 
+    /**
+     * The following constructor takes a two dimensional array of chars and converts it into a board object.
+     * @param board:Board is a char[][] that makes the board
+     */
+    public Board(char[][]board){
+        this.board = board;
+    }
+    /**
+     * This method takes a given board and prints it.
+     */
+    public void printBoard(){
+        for(int i = 0;i<board.length;i++){
+            for(int j = 0;j<board.length;j++){
+                System.out.print(board[i][j]+" "+" ");
+            }
+            System.out.println("");
+        }
+    }
+    /**
+     * This method shows how many grids are not revealed to the player.
+     * @param board:board is the board on which the number of unrevealed grids are to be checked.
+     * @return int:this is the returned value of the number of grids that are unrevealed to the player
+     */
+    public static int unrevealed(Board board){
+        int unrevealed = 0;
+        for(int i = 0;i<board.board.length;i++){
+            for(int j = 0;j<board.board.length;j++){
+                if(board.board[i][j]=='.'){
+                    unrevealed++;
+                }
+            }
+        }
+        return unrevealed;
+    }
+    /**
+     * in the createBoard method below all the grids that are supposed to be revealed are not revealed.Inorder to ensure that all the grids that are needed to be revealed,this 
+     * method rechecks everything
+     * @param real:This is the board that contains all the values
+     * @param fake:This is the board that contains the grids that are to be revealed
+     */
+    public static void revealEdge(Board real, Board fake){
+        int ax = 0;
+        int bx = 0;
+        int ay = 0;
+        int by = 0;
+        for(int i = 0;i<fake.board.length;i++){
+            for(int j = 0;j<fake.board.length;j++){
+                ax = i+1;
+                bx = i-1;
+                ay = j+1;
+                by = j-1;
+                if(fake.board[i][j] == '0'){
+                   if(ax<fake.board.length&&ay<fake.board.length){
+                      if((int)fake.board[ax][ay]==46){
+                        if(real.board[ax][ay]!='*'){
+                            fake.board[ax][ay] = real.board[ax][ay];
+                        }
+                        if(fake.board[ax][ay] == '0'){
+                            createBoard(real,fake,ax,ay);
+                        }
+                      }
+                   }
+                   
+                   if(ax<fake.board.length&&by>=0){
+                      if((int)fake.board[ax][by]==46){
+                        if(real.board[ax][by]!='*'){
+                            fake.board[ax][by] = real.board[ax][by];
+                        }
+                        if(fake.board[ax][by] == '0'){
+                            createBoard(real,fake,ax,by);
+                        }
+                      }
+                   }
+                   
+                   if(bx>=0&&ay<fake.board.length){
+                      if((int)fake.board[bx][ay]==46){
+                        if(real.board[bx][ay]!='*'){
+                            fake.board[bx][ay] = real.board[bx][ay];
+                        }
+                        if(fake.board[bx][ay] == '0'){
+                            createBoard(real,fake,bx,ay);
+                        }
+                      }
+                   }
+                   
+                   if(bx>0&&by>=0){
+                      if((int)fake.board[bx][by]==46){
+                        if(real.board[bx][by]!='*'){
+                            fake.board[bx][by] = real.board[bx][by];
+                        }
+                        if(fake.board[bx][by] == '0'){
+                            createBoard(real,fake,bx,by);
+                        }
+                      }
+                   }
+                   
+                   if(i<fake.board.length&&ay<fake.board.length){
+                      if((int)fake.board[i][ay]==46){
+                        if(real.board[i][ay]!='*'){
+                            fake.board[i][ay] = real.board[i][ay];
+                        }
+                        if(fake.board[i][ay] == '0'){
+                            createBoard(real,fake,i,ay);
+                        }
+                      }
+                   }
+                   
+                   if(i<fake.board.length&&by>=0){
+                      if((int)fake.board[i][by]==46){
+                        if(real.board[i][by]!='*'){
+                            fake.board[i][by] = real.board[i][by];
+                        }
+                        if(fake.board[i][by] == '0'){
+                            createBoard(real,fake,i,by);
+                        }
+                      }
+                   }
+                   
+                   if(ax<fake.board.length&&j<fake.board.length){
+                      if((int)fake.board[ax][j]==46){
+                        if(real.board[ax][j]!='*'){
+                            fake.board[ax][j] = real.board[ax][j];
+                        }
+                        if(fake.board[ax][j] == '0'){
+                            createBoard(real,fake,ax,j);
+                        }
+                      }
+                   }
+                   
+                   if(bx>=0&&j<fake.board.length){
+                      if((int)fake.board[bx][j]==46){
+                        if(real.board[bx][j]!='*'){
+                            fake.board[bx][j] = real.board[bx][j];
+                        }
+                        if(fake.board[bx][j] == '0'){
+                            createBoard(real,fake,bx,j);
+                        }
+                      }
+                   }
+                }
+            }
+        }
+    }
+    /**
+     * This method take two boards(one holding the values that each grid holds and the location of the bomb,i.e the real board,and the display board,
+     * i.e the fake board)and the co-ordinates which the player gives.
+     * The aim of the method is to create the board which the player is to see,a certain part of the real board and the fake board.
+     * @param real:This is the board that has the actual values of the grid
+     * @param fake:This is the board that is revealed to the player
+     * @param x:THis is the column number that is given
+     * @param y:This is the row number that is given
+     */
+    public static Board createBoard(Board real,Board fake,int x,int y){
+      if((int)real.board[x][y]> 48){
+          fake.board[x][y] = real.board[x][y];
+          return fake;
+      }
+      else{
+          int i1 = x;
+          int j1 = y;
+          int i2 = 0;
+          int j2 = 0;
+          while(i1<fake.board.length && j1<fake.board.length && real.board[i1][j1] == '0'){
+              for(i2 = i1;i2<fake.board.length;i2++){
+                  if(real.board[i2][j1] == '0'){
+                      fake.board[i2][j1] = real.board[i2][j1];
+                  }
+                  else{
+                      break;
+                  }
+              }
+              
+              for(j2 = j1;j2<fake.board.length;j2++){
+                  if(real.board[i1][j2] == '0'){
+                      fake.board[i1][j2] = real.board[i1][j2];
+                  }
+                  else{
+                      break;
+                  }
+              }
+              
+              i1++;
+              j1++;
+          }
+          i1 = x;
+          j1 = y;
+          int i3 = 0;
+          int j3 = 0;
+          while(i1>=0 && j1>=0 && real.board[i1][j1] == '0'){
+              for(i3 = i1;i3>=0;i3--){
+                  if(real.board[i3][j1] == '0'){
+                      fake.board[i3][j1] = real.board[i3][j1];
+                  }
+                  else{
+                      break;
+                  }
+              }
+              
+              for(j3 = j1;j3>=0;j3--){
+                  if(real.board[i1][j3] == '0'){
+                      fake.board[i1][j3] = real.board[i1][j3];
+                  }
+                  else{
+                      break;
+                  }
+              }
+              i1--;
+              j1--;
+            }
+          i1 = x;
+          j1 = y;
+          int i4 = 0;
+          int j4 = 0;
+          while(i1<fake.board.length && j1>=0 && real.board[i1][j1] == '0'){
+              for(i4 = i1;i4<fake.board.length;i4++){
+                  if(real.board[i4][j1] == '0'){
+                      fake.board[i4][j1] = real.board[i4][j1];
+                  }
+                  else{
+                      break;
+                  }
+              }
+ 
+              for(j4 = j1;j4>=0;j4--){
+                  if(real.board[i1][j4] == '0'){
+                      fake.board[i1][j4] = real.board[i1][j4];
+                  }
+                  else{
+                      break;
+                  }
+              }
+              /*if(j4>=0&&fake.board[i1][j4+1] == '0'){
+                  fake.board[i1][j4] = real.board[i1][j4];
+              }*/
+              i1++;
+              j1--;
+          }
+          i1 = x;
+          j1 = y;
+          int i5 = 0;
+          int j5 = 0;
+          while(i1>=0 && j1<fake.board.length && real.board[i1][j1] == '0'){
+              for(i5 = i1;i5>=0;i5--){
+                  if(real.board[i5][j1] == '0'){
+                      fake.board[i5][j1] = real.board[i5][j1];
+                  }
+                  else{
+                      break;
+                  }
+              }
+              
+              for(j5 = j1;j5<fake.board.length;j5++){
+                  if(real.board[i1][j5] == '0'){
+                      fake.board[i1][j5] = real.board[i1][j5];
+                  }
+                  else{
+                      break;
+                  }
+              }
+              i1--;
+              j1++;
+          }
+          revealEdge(real,fake);
+      }
+      return fake;
+    }  
+     
+    public static void printDup(Board real,Board fake,int x,int y){
+        Board board = createBoard(real,fake,x,y);
+        board.printBoard();
+    }
+}
+
