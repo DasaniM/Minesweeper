@@ -1,0 +1,33 @@
+/**
+ * The Bomb or mines class holds the co-ordinates of the location which the bomb is located in.
+ */
+ public class Bomb{
+     int x,y;
+     /**
+      * The constructor initializes the x and y variable to whatever input is given. 
+      */
+     public Bomb(int x,int y){
+         this.x = x;
+         this.y = y;
+    }
+    /**
+     * This constructor initializes the instance variables to 0.
+     * It is a default constructor.
+     */
+     public Bomb(){
+         this.x = 0;
+         this.y = 0;
+    }
+    /**
+     * The following method takes two bombs and checks whether the two bombs are the same.
+     */
+     public boolean checkBomb(Bomb z){
+         if(z.x==x&&z.y==y){
+             return true;
+         }
+         else{
+             return false;
+         }
+    }
+}
+
